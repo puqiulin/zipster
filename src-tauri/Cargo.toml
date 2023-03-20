@@ -1,0 +1,31 @@
+[package]
+name = "app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+license = ""
+repository = ""
+default-run = "app"
+edition = "2021"
+rust-version = "1.59"
+
+[build-dependencies]
+tauri-build = { version = "1.2.1", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.2.4", features = ["api-all", "devtools", "fs-extract-api", "global-shortcut", "icon-ico", "icon-png", "macos-private-api", "reqwest-client", "windows7-compat"] }
+tokio = { version = "1.20.1", features = ["full"] }
+anyhow = { version = "1.0.62" }
+chrono = { version = "0.4.22", features = ["serde"] }
+open = { version = "3.0.2" }
+window-shadows = { version = "0.2.1" }
+window-vibrancy = { version = "0.3.2" }
+once_cell = { vesion = "1.17.0" }
+parking_lot = { version = "0.12.1" }
+
+
+[features]
+default = ["custom-protocol"]
+custom-protocol = ["tauri/custom-protocol"]
