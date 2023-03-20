@@ -13,13 +13,17 @@
     "@emotion/styled": "^11.10.6",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.13",
+    "@tauri-apps/api": "^1.2.0",
+    "localforage": "^1.10.0",
+    "notistack": "^3.0.1",
     "path": "^0.12.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.9.0",
     "recoil": "^0.7.7",
     "sass": "^1.59.3",
-    "scss": "^0.2.4"
+    "scss": "^0.2.4",
+    "swr": "^2.1.0"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.2.3",

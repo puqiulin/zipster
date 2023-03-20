@@ -1,0 +1,24 @@
+{
+  "tauri": {
+    "bundle": {
+      "macOS": {
+        "entitlements": null,
+        "exceptionDomain": "",
+        "frameworks": [],
+        "providerShortName": null,
+        "signingIdentity": null
+      }
+    },
+    "windows": [
+      {
+        "minHeight": 600,
+        "minWidth": 800,
+        "titleBarStyle": "Overlay",
+        "hiddenTitle": true,
+        "fullscreen": false,
+        "resizable": true,
+        "focus": true
+      }
+    ]
+  }
+}

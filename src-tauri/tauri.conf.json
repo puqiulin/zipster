@@ -1,14 +1,14 @@
 {
+  "package": {
+    "productName": "zipster",
+    "version": "0.1.0"
+  },
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
   "build": {
     "beforeBuildCommand": "yarn run build",
     "beforeDevCommand": "yarn run dev",
     "devPath": "http://localhost:3000",
     "distDir": "../build"
-  },
-  "package": {
-    "productName": "zipster",
-    "version": "0.1.0"
   },
   "tauri": {
     "macOSPrivateApi": true,
@@ -32,41 +32,15 @@
       ],
       "identifier": "com.tauri.dev",
       "longDescription": "",
-      "macOS": {
-        "entitlements": null,
-        "exceptionDomain": "",
-        "frameworks": [],
-        "providerShortName": null,
-        "signingIdentity": null
-      },
       "resources": [],
       "shortDescription": "",
-      "targets": "all",
-      "windows": {
-        "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampUrl": ""
-      }
+      "targets": "all"
     },
     "security": {
       "csp": null
     },
     "updater": {
       "active": false
-    },
-    "windows": [
-      {
-        "title": "zipster",
-        "height": 600,
-        "width": 800,
-        "titleBarStyle": "Overlay",
-        "hiddenTitle": true,
-        "decorations": false,
-        "transparent": true,
-        "skipTaskbar": true,
-        "fullscreen": false,
-        "resizable": true
-      }
-    ]
+    }
   }
 }

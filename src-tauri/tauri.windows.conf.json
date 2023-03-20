@@ -1,0 +1,33 @@
+{
+  "tauri": {
+    "bundle": {
+      "windows": {
+        "certificateThumbprint": null,
+        "digestAlgorithm": "sha256",
+        "timestampUrl": "",
+        "webviewInstallMode": {
+          "type": "embedBootstrapper"
+        },
+        "wix": {
+          "language": [
+            "en-US"
+          ]
+        }
+      }
+    },
+    "windows": [
+      {
+        "minWidth": 800,
+        "minHeight": 600,
+        "titleBarStyle": "Overlay",
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true,
+        "hiddenTitle": true,
+        "focus": true,
+        "resizable": false
+      }
+    ]
+  }
+}
+
