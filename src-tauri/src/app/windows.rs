@@ -1,6 +1,6 @@
 use tauri::Manager;
 use window_shadows::set_shadow;
-use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
+use window_vibrancy::{apply_vibrancy, apply_acrylic, NSVisualEffectMaterial};
 
 use crate::app::handler::Handler;
 
@@ -9,7 +9,7 @@ pub fn init() {
     set_shadow(main_window.clone(), true).unwrap();
 
     #[cfg(target_os = "macos")]
-    //dark and light model
+    //Todo: switch dark and light model
     apply_vibrancy(&main_window, NSVisualEffectMaterial::HudWindow, None, Some(20 as f64)).unwrap();
 
     #[cfg(target_os = "windows")]
