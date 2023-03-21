@@ -3,13 +3,16 @@ import App from "@/App";
 import Zip from "@/pages/zip";
 import Setting from "@/pages/setting";
 import Home from "@/pages/home";
-import AppLoader from "@/components/loading/app-loading";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App/>,
         children: [
+            {
+                path: "",
+                element: <Home/>,
+            },
             {
                 path: "zip",
                 element: <Zip/>,
@@ -19,7 +22,7 @@ const router = createBrowserRouter([
                 element: <Home/>,
             },
             {
-                path: "setting",
+                path: "settings",
                 element: <Setting/>,
             },
         ],

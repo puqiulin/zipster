@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import "./App.scss"
 import {Divider, IconButton, Paper, ThemeProvider} from "@mui/material";
 import {darkTheme, lightTheme} from "@/theme";
@@ -20,6 +20,7 @@ const App: React.FC = () => {
     const navigation = useNavigation();
     const [theme, setTheme] = useRecoilState(themeState);
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+    const [selectMenu, setSelectMenu] = useState<string>("home")
 
     useEffect(() => {
         const t = theme === "null" ? prefersDarkMode ? "dark" : "light" : theme === "light" ? "light" : "dark"
@@ -43,25 +44,32 @@ const App: React.FC = () => {
                                     <GitHubIcon className="MuiSvgIcon-colorCustom"/>
                                 </IconButton>
                                 <NavLink to="/home">
-                                    <IconButton size="large">
-                                        <HomeIcon className="MuiSvgIcon-colorCustom"/>
+                                    <IconButton sx={{boxShadow: selectMenu === "home" ? "0 0 5px" : ""}} size="large"
+                                                onClick={() => setSelectMenu("home")}>
+                                        <HomeIcon
+                                            className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
                                 <NavLink to="/zip">
-                                    <IconButton size="large">
-                                        <FolderIcon className="MuiSvgIcon-colorCustom"/>
+                                    <IconButton sx={{boxShadow: selectMenu === "zip" ? "0 0 5px" : ""}} size="large"
+                                                onClick={() => setSelectMenu("zip")}>
+                                        <FolderIcon
+                                            className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
-
                             </div>
                             <div className="menu-bottom">
-                                <NavLink to="/setting">
-                                    <IconButton size="large">
-                                        <SettingsIcon className="MuiSvgIcon-colorCustom"/>
+                                <NavLink to="/settings">
+                                    <IconButton sx={{boxShadow: selectMenu === "settings" ? "0 0 5px" : ""}}
+                                                size="large"
+                                                onClick={() => setSelectMenu("settings")}>
+                                        <SettingsIcon
+                                            className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
                                 <IconButton size="large" onClick={() => exitAppCMD()}>
-                                    <PowerSettingsNewIcon className="MuiSvgIcon-colorCustom"/>
+                                    <PowerSettingsNewIcon
+                                        className="MuiSvgIcon-colorCustom"/>
                                 </IconButton>
                             </div>
                         </div>

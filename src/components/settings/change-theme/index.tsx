@@ -24,7 +24,6 @@ const ChangeTheme: React.FC = () => {
         // })
     }
 
-
     return (
         <IconButton onClick={() => changeTheme()}>
             {theme === 'light' ? <DarkModeIcon className="MuiSvgIcon-colorCustom"/> :

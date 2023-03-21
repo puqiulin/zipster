@@ -9,12 +9,14 @@
         "signingIdentity": null
       }
     },
-    "windows": [
+    "windows": [w
       {
         "minHeight": 600,
         "minWidth": 800,
         "titleBarStyle": "Overlay",
         "hiddenTitle": true,
+        "decorations": false,
+        "transparent": true,
         "fullscreen": false,
         "resizable": true,
         "focus": true
