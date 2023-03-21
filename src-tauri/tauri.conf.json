@@ -1,6 +1,6 @@
 {
   "package": {
-    "productName": "zipster",
+    "productName": "Zipster",
     "version": "0.1.0"
   },
   "$schema": "../node_modules/@tauri-apps/cli/schema.json",
@@ -8,7 +8,8 @@
     "beforeBuildCommand": "yarn run build",
     "beforeDevCommand": "yarn run dev",
     "devPath": "http://localhost:3000",
-    "distDir": "../build"
+    "distDir": "../dist",
+    "withGlobalTauri": true
   },
   "tauri": {
     "macOSPrivateApi": true,
@@ -30,7 +31,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.oneday.zipster",
       "longDescription": "",
       "resources": [],
       "shortDescription": "",

@@ -1,21 +1,20 @@
 import React, {useEffect} from "react";
 import "./App.scss"
-import {Avatar, Divider, IconButton, Paper, ThemeProvider} from "@mui/material";
+import {Divider, IconButton, Paper, ThemeProvider} from "@mui/material";
 import {darkTheme, lightTheme} from "@/theme";
 import HomeIcon from '@mui/icons-material/Home';
 import FolderIcon from '@mui/icons-material/Folder';
 import SettingsIcon from '@mui/icons-material/Settings';
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
 import PowerSettingsNewIcon from '@mui/icons-material/PowerSettingsNew';
 import {NavLink, Outlet, useNavigation} from "react-router-dom";
 import AppLoading from "@/components/loading/app-loading";
 import {useRecoilState} from "recoil";
-import {themeState} from "@/hooks/states";
+import {themeState} from "@/services/states";
 import localforage from "localforage";
-import {changeThemeCMD, exitAppCMD} from "@/services/cmds";
-import {enqueueSnackbar} from "notistack";
+import {exitAppCMD} from "@/services/cmds";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import GitHubIcon from '@mui/icons-material/GitHub';
+import {open} from '@tauri-apps/api/shell';
 
 const App: React.FC = () => {
     const navigation = useNavigation();
@@ -28,21 +27,6 @@ const App: React.FC = () => {
         localforage.setItem("theme", t).then()
     }, [])
 
-
-    const changeTheme = async () => {
-        const t = theme === "light" ? "dark" : "light"
-        setTheme(t)
-        await localforage.setItem("theme", t)
-
-        // NotMainThread("\"apply_vibrancy()\" can only be used on the main thread.
-        // changeThemeCMD({theme: t}).then(async () => {
-        //     await localforage.setItem("theme", t)
-        //     enqueueSnackbar('!')
-        // }).catch(e => {
-        //     enqueueSnackbar(e.toString())
-        // })
-    }
-
     return (
         <ThemeProvider theme={theme === "light" ? lightTheme : darkTheme}>
             {navigation.state === "loading" ?
@@ -53,30 +37,31 @@ const App: React.FC = () => {
                     <div className="app-left">
                         <div className="left-menu">
                             <div className="menu-top">
-                                <Avatar
-                                    src="https://cdn.cloudflare.steamstatic.com/steamcommunity/public/images/avatars/ee/ee9bec135af7d95286079666ab1f022c8b5cc17e_full.jpg"/>
+                                <IconButton size="large" onClick={async () => {
+                                    await open("https://github.com/one0day/zipster")
+                                }}>
+                                    <GitHubIcon className="MuiSvgIcon-colorCustom"/>
+                                </IconButton>
                                 <NavLink to="/home">
                                     <IconButton size="large">
-                                        <HomeIcon/>
+                                        <HomeIcon className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
                                 <NavLink to="/zip">
                                     <IconButton size="large">
-                                        <FolderIcon/>
+                                        <FolderIcon className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
-                                <NavLink to="/setting">
-                                    <IconButton size="large">
-                                        <SettingsIcon/>
-                                    </IconButton>
-                                </NavLink>
+
                             </div>
                             <div className="menu-bottom">
-                                <IconButton onClick={() => changeTheme()}>
-                                    {theme === 'light' ? <DarkModeIcon/> : <LightModeIcon/>}
-                                </IconButton>
+                                <NavLink to="/setting">
+                                    <IconButton size="large">
+                                        <SettingsIcon className="MuiSvgIcon-colorCustom"/>
+                                    </IconButton>
+                                </NavLink>
                                 <IconButton size="large" onClick={() => exitAppCMD()}>
-                                    <PowerSettingsNewIcon/>
+                                    <PowerSettingsNewIcon className="MuiSvgIcon-colorCustom"/>
                                 </IconButton>
                             </div>
                         </div>

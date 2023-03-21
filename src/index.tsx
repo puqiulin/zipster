@@ -8,7 +8,11 @@ import {SnackbarProvider} from 'notistack'
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <RecoilRoot>
-            <SnackbarProvider/>
+            <SnackbarProvider
+                autoHideDuration={2000}
+                anchorOrigin={{horizontal: "center", vertical: "top"}}
+                dense={true}
+            />
             <RouterProvider router={router}/>
         </RecoilRoot>
     </React.StrictMode>

@@ -25,6 +25,12 @@ window-vibrancy = { version = "0.3.2" }
 once_cell = { vesion = "1.17.0" }
 parking_lot = { version = "0.12.1" }
 
+zip = { version = "0.6.4" }
+tar = { version = "0.4.38" }
+flate2 = { version = "1.0.25" }
+bzip2 = { version = "0.4.4" }
+sevenz-rust = { version = "0.2.9" }
+unrar = { version = "0.4.4" }
 
 [features]
 default = ["custom-protocol"]

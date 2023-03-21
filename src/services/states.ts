@@ -5,5 +5,5 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const themeState = atom<string>({
     key: 'themeState',
-    default: await localforage.getItem("theme") || "null",
+    default: localforage.getItem("theme").then() || "null",
 });
