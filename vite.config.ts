@@ -16,7 +16,7 @@ export default defineConfig({
             '@': path.resolve(__dirname, "./src"),
             '@root': path.resolve(__dirname, "."),
         },
-        extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
+        extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json']
     },
     plugins: [react()],
 })

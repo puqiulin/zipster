@@ -1,0 +1,57 @@
+.decompression-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .decompression-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1em;
+  }
+
+  .decompression-content {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .decompression-card {
+      width: 90%;
+      max-height: 90%;
+      transition: all .25s linear;
+
+      .decompression-top-box {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+
+      .decompression-bottom-box {
+        max-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        margin-top: 0.5em;
+
+        .decompression-file-info {
+          display: flex;
+          flex-direction: column;
+          font-size: 15px;
+          gap: 0.5em;
+          overflow-y: auto;
+        }
+
+        .decompression-bottom-buttons {
+          display: flex;
+          flex-direction: column;
+          gap: 0.5em;
+        }
+      }
+    }
+  }
+}

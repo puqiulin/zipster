@@ -9,6 +9,16 @@ export const darkTheme = createTheme({
         mode: 'dark',
     },
     components: {
+        // MuiButton: {
+        //     styleOverrides: {
+        //         root: {
+        //             backgroundColor: "hotpink",
+        //             '&:hover': {
+        //                 backgroundColor: 'pink',
+        //             },
+        //         },
+        //     },
+        // },
         MuiPaper: {
             styleOverrides: {
                 root: {

@@ -14,31 +14,20 @@ pub struct Zipster {
 }
 
 impl Zipster {
+    pub fn zip(input_file_path: &str, output_file_path_dir: &str) -> Result<()> {
+        Ok(())
+    }
+
     pub fn unzip(input_file_path: &str, output_file_path_dir: &str) -> Result<()> {
         let file = File::open(input_file_path)?;
         let mut archive = ZipArchive::new(file)?;
 
-        let output_file_path =
-            Path::new(output_file_path_dir).join(input_file_path.strip_suffix(".zip").expect(""));
-        let mut output_file = File::create(&output_file_path)?;
-
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
-            let out_path = match file.enclosed_name() {
-                Some(path) => path.to_owned(),
-                None => continue,
-            };
-            std::io::copy(&mut file, &mut output_file)?;
+            let out_path = Path::new(output_file_path_dir).join(file.name());
 
-            // Get and Set permissions
-            #[cfg(unix)]
-            {
-                use std::os::unix::fs::PermissionsExt;
-
-                if let Some(mode) = file.unix_mode() {
-                    fs::set_permissions(&out_path, fs::Permissions::from_mode(mode)).unwrap();
-                }
-            }
+            let mut out_file = File::create(&out_path)?;
+            std::io::copy(&mut file, &mut out_file)?;
         }
 
         Ok(())

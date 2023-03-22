@@ -3,6 +3,8 @@ import App from "@/App";
 import Zip from "@/pages/zip";
 import Setting from "@/pages/setting";
 import Home from "@/pages/home";
+import Decompression from "@/pages/decompression";
+import Compression from "@/pages/compression";
 
 const router = createBrowserRouter([
     {
@@ -14,12 +16,16 @@ const router = createBrowserRouter([
                 element: <Home/>,
             },
             {
-                path: "zip",
-                element: <Zip/>,
-            },
-            {
                 path: "home",
                 element: <Home/>,
+            },
+            {
+                path: "decompression",
+                element: <Decompression/>,
+            },
+            {
+                path: "compression",
+                element: <Compression/>,
             },
             {
                 path: "settings",

@@ -15,6 +15,8 @@ import {exitAppCMD} from "@/services/cmds";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import GitHubIcon from '@mui/icons-material/GitHub';
 import {open} from '@tauri-apps/api/shell';
+import FolderZipIcon from '@mui/icons-material/FolderZip';
+import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 
 const App: React.FC = () => {
     const navigation = useNavigation();
@@ -44,16 +46,27 @@ const App: React.FC = () => {
                                     <GitHubIcon className="MuiSvgIcon-colorCustom"/>
                                 </IconButton>
                                 <NavLink to="/home">
-                                    <IconButton sx={{boxShadow: selectMenu === "home" ? "0 0 5px" : ""}} size="large"
-                                                onClick={() => setSelectMenu("home")}>
+                                    <IconButton
+                                        sx={{boxShadow: selectMenu === "home" ? "0 0 5px" : ""}}
+                                        size="large"
+                                        onClick={() => setSelectMenu("home")}>
                                         <HomeIcon
                                             className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
-                                <NavLink to="/zip">
-                                    <IconButton sx={{boxShadow: selectMenu === "zip" ? "0 0 5px" : ""}} size="large"
-                                                onClick={() => setSelectMenu("zip")}>
-                                        <FolderIcon
+                                <NavLink to="/decompression">
+                                    <IconButton sx={{boxShadow: selectMenu === "decompression" ? "0 0 5px" : ""}}
+                                                size="large"
+                                                onClick={() => setSelectMenu("decompression")}>
+                                        <DriveFileMoveIcon
+                                            className="MuiSvgIcon-colorCustom"/>
+                                    </IconButton>
+                                </NavLink>
+                                <NavLink to="/compression">
+                                    <IconButton sx={{boxShadow: selectMenu === "compression" ? "0 0 5px" : ""}}
+                                                size="large"
+                                                onClick={() => setSelectMenu("compression")}>
+                                        <FolderZipIcon
                                             className="MuiSvgIcon-colorCustom"/>
                                     </IconButton>
                                 </NavLink>
