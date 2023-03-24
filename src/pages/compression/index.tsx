@@ -108,7 +108,7 @@ const Compression: React.FC = () => {
                             <div className="compression-bottom-box">
                                 <div className="compression-file-info">
                                     {filesInfo?.map((fileInfo, index) => (
-                                        <FilesItem key={index} fileInfo={fileInfo}/>
+                                        <FilesItem key={index} fileInfo={fileInfo} isCompression={true}/>
                                     ))}
                                 </div>
                                 <div className="compression-bottom-buttons">

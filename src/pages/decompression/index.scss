@@ -40,10 +40,9 @@
 
         .decompression-file-info {
           display: flex;
-          flex-direction: column;
           font-size: 15px;
-          gap: 0.5em;
           overflow-y: auto;
+          gap: 0.5em;
         }
 
         .decompression-bottom-buttons {

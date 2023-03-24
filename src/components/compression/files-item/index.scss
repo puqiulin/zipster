@@ -1,0 +1,32 @@
+.files-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+
+  .files-item-info-box {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 0.5em;
+
+    .files-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5em;
+
+      .files-item-info-head {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+
+        .files-item-info-name {
+          font-size: 18px;
+          font-weight: bold;
+        }
+      }
+
+      .files-item-info-size {
+      }
+    }
+  }
+}

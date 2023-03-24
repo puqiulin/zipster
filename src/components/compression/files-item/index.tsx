@@ -12,21 +12,23 @@ import {covertFileSizeToHuman} from "@/utils/utils";
 import fileInfo = CmdResponseType.fileInfo;
 import {getDirSizeCMD} from "@/services/cmds";
 import {enqueueSnackbar} from "notistack";
+import "./index.scss"
 
 interface Props {
-    fileInfo: fileInfo
+    fileInfo?: fileInfo
+    isCompression: boolean
 }
 
 const FilesItem: React.FC<Props> = (props) => {
-    const {fileInfo} = props;
+    const {fileInfo, isCompression} = props;
     const [compressionFiles, setCompressionFiles] = useRecoilState(compressionFilesState)
     const [fileSizeLoading, setFileSizeLoading] = useState<boolean>(false)
     const [fileSize, setFileSize] = useState<number>(0)
 
     useEffect(() => {
-        if (fileInfo.isDir) {
+        if (fileInfo?.isDir) {
             setFileSizeLoading(true)
-            getDirSizeCMD({dirPath: fileInfo.path}).then(size => setFileSize(size)).catch(e => {
+            getDirSizeCMD({dirPath: fileInfo?.path}).then(size => setFileSize(size)).catch(e => {
                 enqueueSnackbar("Get size error: " + JSON.stringify(e), {
                     variant: "error",
                 })
@@ -34,20 +36,20 @@ const FilesItem: React.FC<Props> = (props) => {
                 setFileSizeLoading(false)
             })
         } else {
-            setFileSize(fileInfo.size)
+            setFileSize(fileInfo?.size || 0)
         }
-    }, [fileInfo.size])
+    }, [fileInfo?.size])
 
     const removeFileItem = () => {
-        setCompressionFiles(compressionFiles.filter(f => f !== fileInfo.path))
+        setCompressionFiles(compressionFiles.filter(f => f !== fileInfo?.path))
     }
 
     return (
         <div className="files-item">
             <div className="files-item-info-box">
-                <IconButton onClick={() => removeFileItem()}>
+                {isCompression && <IconButton onClick={() => removeFileItem()}>
                     <RemoveCircleOutlineIcon sx={{fontSize: "30px"}} className="MuiSvgIcon-colorCustom"/>
-                </IconButton>
+                </IconButton>}
                 <div className="files-item-info">
                     <div className="files-item-info-head">
                         <div>

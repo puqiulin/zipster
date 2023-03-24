@@ -29,7 +29,7 @@ const ConfirmDialog: React.FC = () => {
     const compressionFilesInfo = useRecoilValue(compressionFilesInfoState)
     const [compressionFilesLoading, setCompressionFilesLoading] = useState<boolean>(false)
     const [compressionName, setCompressionName] = useState<string>("compression")
-    const [savePath, setSavePath] = useState<string>(getParentDirectory(compressionFilesInfo[0].path))
+    const [savePath, setSavePath] = useState<string>(getParentDirectory(compressionFilesInfo.length > 0 ? compressionFilesInfo[0].path : ""))
     const [openExplore, setOpenExplore] = useState<boolean>(false)
 
     const compression = async () => {

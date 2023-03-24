@@ -13,6 +13,7 @@ import {enqueueSnackbar} from "notistack";
 import FolderIcon from '@mui/icons-material/Folder';
 import {decompressionCMD, getFileInfoCMD, openCMD} from "@/services/cmds";
 import {getParentDirectory} from "@/utils/utils";
+import FilesItem from "@/components/compression/files-item";
 
 const Decompression: React.FC = () => {
 
@@ -84,7 +85,7 @@ const Decompression: React.FC = () => {
                         {decompressionFile &&
                             <div className="decompression-bottom-box">
                                 <div className="decompression-file-info">
-                                    <div>{fileInfo?.fileName}&nbsp;[{fileInfo?.fileSize && (fileInfo?.fileSize / (1024 * 1024)).toFixed(2)}MB]</div>
+                                    <FilesItem fileInfo={fileInfo} isCompression={false}/>
                                 </div>
                                 {decompressionFile ?
                                     <div className="decompression-bottom-buttons">
