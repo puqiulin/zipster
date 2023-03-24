@@ -13,10 +13,14 @@ pub struct DecompressionParam {
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct CompressionParam {
+    #[serde(rename(deserialize = "compressionType"))]
+    pub compression_type: String,
     #[serde(rename(deserialize = "filesPath"))]
     pub files_path: Vec<String>,
-    #[serde(rename(deserialize = "compressionFormat"))]
-    pub compression_format: String,
+    #[serde(rename(deserialize = "savePath"))]
+    pub save_path: String,
+    #[serde(rename(deserialize = "fileName"))]
+    pub file_name: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

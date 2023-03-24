@@ -3,9 +3,7 @@ use anyhow::Result;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub fn get_file_info(file_path: &str) -> Result<FileInfoResponse> {
-    let file_path = Path::new(file_path);
-
+pub fn get_file_info(file_path: &Path) -> Result<FileInfoResponse> {
     Ok(FileInfoResponse {
         name: file_path
             .file_name()
@@ -25,9 +23,7 @@ pub fn get_file_info(file_path: &str) -> Result<FileInfoResponse> {
     })
 }
 
-pub fn get_dir_info(file_path: &str) -> Result<FileInfoResponse> {
-    let file_path = Path::new(file_path);
-
+pub fn get_dir_info(file_path: &Path) -> Result<FileInfoResponse> {
     Ok(FileInfoResponse {
         name: file_path
             .file_name()
@@ -47,7 +43,7 @@ pub fn get_dir_info(file_path: &str) -> Result<FileInfoResponse> {
     })
 }
 
-pub fn get_files_info(files_path: Vec<&str>) -> Result<Vec<FileInfoResponse>> {
+pub fn get_files_info(files_path: Vec<&Path>) -> Result<Vec<FileInfoResponse>> {
     Ok(files_path
         .iter()
         .map(|f| get_file_info(f).expect("get file info failed"))

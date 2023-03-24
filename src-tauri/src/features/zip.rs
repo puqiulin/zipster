@@ -2,8 +2,11 @@ use anyhow::Result;
 use once_cell::sync::OnceCell;
 use std::fs;
 use std::fs::File;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
-use zip::ZipArchive;
+use walkdir::WalkDir;
+use zip::write::FileOptions;
+use zip::{CompressionMethod, ZipArchive, ZipWriter};
 
 pub struct Zip {
     // zip:.zip(c/dc),.jar(c/dc)
@@ -15,11 +18,45 @@ impl Zip {
         ZIP.get_or_init(|| Zip {})
     }
 
-    pub fn zip(&self, files_path: Vec<&str>) -> Result<()> {
+    pub fn zip(&self, files_path: Vec<&Path>, save_path: &Path, file_name: &str) -> Result<()> {
+        let zip_file = File::create(save_path.join(file_name))?;
+        let zip_option = FileOptions::default().compression_method(CompressionMethod::Deflated);
+        let mut zip = ZipWriter::new(zip_file);
+
+        for p in files_path {
+            if p.is_dir() {
+                for entry in WalkDir::new(p) {
+                    let entry = entry?;
+                    let entry_path = entry.path();
+                    if entry_path.is_file() {
+                        let file_name = entry_path
+                            .file_name()
+                            .expect("Get file name failed")
+                            .to_str()
+                            .expect("File name to str failed");
+                        let mut buffer = Vec::new();
+                        File::open(entry_path)?.read_to_end(&mut buffer)?;
+                        zip.start_file(file_name, zip_option)?;
+                        zip.write_all(&buffer)?;
+                    }
+                }
+            } else if p.is_file() {
+                let file_name = p
+                    .file_name()
+                    .expect("Get file name failed")
+                    .to_str()
+                    .expect("File name to str failed");
+                let mut buffer = Vec::new();
+                File::open(p)?.read_to_end(&mut buffer)?;
+                zip.start_file(file_name, zip_option)?;
+                zip.write_all(&buffer)?;
+            }
+        }
+        zip.finish()?;
         Ok(())
     }
 
-    pub fn unzip(&self, file_path: &str) -> Result<()> {
+    pub fn unzip(&self, file_path: &Path) -> Result<()> {
         let file_path = Path::new(file_path);
         let mut output_dir = file_path
             .parent()

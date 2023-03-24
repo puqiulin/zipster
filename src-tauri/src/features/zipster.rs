@@ -21,13 +21,12 @@ impl Zipster {
         ZIPSTER.get_or_init(|| Zipster {})
     }
 
-    pub fn decompression(&self, file_path: &str) -> Result<()> {
-        let file = Path::new(file_path);
-        let extension = file
+    pub fn decompression(&self, file_path: &Path) -> Result<()> {
+        let extension = file_path
             .extension()
             .expect("Unsupported file extension")
             .to_str()
-            .expect("Failed file extension to str ");
+            .expect("Failed file extension to str");
 
         match extension {
             "zip" | "jar" => Zip::global().unzip(file_path),
@@ -39,9 +38,15 @@ impl Zipster {
         }
     }
 
-    pub fn compression(&self, files_path: Vec<&str>, compressed_format: &str) -> Result<()> {
-        match compressed_format {
-            "zip" => Zip::global().zip(files_path),
+    pub fn compression(
+        &self,
+        compression_type: &str,
+        files_path: Vec<&Path>,
+        save_path: &Path,
+        file_name: &str,
+    ) -> Result<()> {
+        match compression_type {
+            "zip" => Zip::global().zip(files_path, save_path, file_name),
             "7z" => Ok(()),
             "rar" => Ok(()),
             "tar" => Ok(()),

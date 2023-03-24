@@ -34,8 +34,13 @@ const ConfirmDialog: React.FC = () => {
 
     const compression = async () => {
         setCompressionFilesLoading(true)
-        compressionCMD({filesPath: compressionFiles || [], savePath}).then(async () => {
-            enqueueSnackbar("compression file successfully! ", {
+        compressionCMD({
+            compressionType,
+            filesPath: compressionFiles || [],
+            savePath,
+            fileName: `${compressionName}.${compressionType}`
+        }).then(async () => {
+            enqueueSnackbar("Compression files successfully! ", {
                 variant: "success",
             })
             await openCMD({path: savePath})
@@ -118,9 +123,8 @@ const ConfirmDialog: React.FC = () => {
                     variant="contained"
                     disabled={!compressionName || !savePath || compressionFilesLoading}
                     onClick={() => compression()}
-                    startIcon={compressionFilesLoading && <CircularProgress size={25}/>}
                 >
-                    {!compressionFilesLoading && "Start"}
+                    {compressionFilesLoading ? <CircularProgress size={25}/> : "Start"}
                 </Button>
             </DialogActions>
         </Dialog>

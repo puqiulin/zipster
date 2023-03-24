@@ -8,8 +8,10 @@ declare namespace CmdType {
     }
 
     interface compressionParam {
+        compressionType: string
         filesPath: string[],
         savePath: string
+        fileName: string
     }
 
     interface openParam {

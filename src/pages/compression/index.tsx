@@ -1,11 +1,11 @@
-import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import "./index.scss"
 import Typography from '@mui/material/Typography';
 import {
     Button,
     Card,
     CardContent,
-    CircularProgress, Divider, IconButton, MenuItem, Select,
+    CircularProgress, MenuItem, Select,
 } from "@mui/material";
 import {open} from '@tauri-apps/api/dialog';
 import {enqueueSnackbar} from "notistack";
@@ -22,7 +22,6 @@ import {
 import FolderIcon from '@mui/icons-material/Folder';
 import DescriptionIcon from '@mui/icons-material/Description';
 import FilesItem from "@/components/compression/files-item";
-import fileInfo = CmdResponseType.fileInfo;
 import {supportCompressionType} from "@/utils/constants";
 
 const Compression: React.FC = () => {

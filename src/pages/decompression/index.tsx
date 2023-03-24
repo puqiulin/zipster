@@ -36,7 +36,7 @@ const Decompression: React.FC = () => {
                 setFileInfo(file)
             })
         }).catch(e => {
-            enqueueSnackbar("open file error: " + JSON.stringify(e), {
+            enqueueSnackbar("Open file explorer error: " + JSON.stringify(e), {
                 variant: "error",
             })
         }).finally(() => {
@@ -48,12 +48,12 @@ const Decompression: React.FC = () => {
         setDecompressionFileLoading(true)
         if (decompressionFile) {
             decompressionCMD({filePath: decompressionFile}).then(async () => {
-                enqueueSnackbar("decompression file successfully! ", {
+                enqueueSnackbar("Decompression file successfully! ", {
                     variant: "success",
                 })
                 await openCMD({path: getParentDirectory(decompressionFile)})
             }).catch(e => {
-                enqueueSnackbar("decompression file error: " + JSON.stringify(e), {
+                enqueueSnackbar("Decompression file error: " + JSON.stringify(e), {
                     variant: "error",
                 })
             }).finally(() => {
