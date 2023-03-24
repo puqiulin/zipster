@@ -18,6 +18,7 @@ impl Zip {
         ZIP.get_or_init(|| Zip {})
     }
 
+    //TODO: keep contains dir structure
     pub fn zip(&self, files_path: Vec<&Path>, save_path: &Path, file_name: &str) -> Result<()> {
         let zip_file = File::create(save_path.join(file_name))?;
         let zip_option = FileOptions::default().compression_method(CompressionMethod::Deflated);
@@ -56,6 +57,7 @@ impl Zip {
         Ok(())
     }
 
+    //TODO:keep contains dir structure
     pub fn unzip(&self, file_path: &Path) -> Result<()> {
         let file_path = Path::new(file_path);
         let mut output_dir = file_path
@@ -88,9 +90,17 @@ impl Zip {
         let mut archive = ZipArchive::new(File::open(file_path)?)?;
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
+            let out_path = file.mangled_name();
 
-            let mut out_file = File::create(output_dir.join(file.name()))?;
-            std::io::copy(&mut file, &mut out_file)?;
+            if file.is_dir() {
+                fs::create_dir_all(&out_path)?;
+            } else {
+                if let Some(parent) = out_path.parent() {
+                    fs::create_dir_all(parent)?;
+                }
+                let mut out_file = File::create(out_path)?;
+                std::io::copy(&mut file, &mut out_file)?;
+            }
         }
 
         Ok(())
