@@ -78,6 +78,7 @@ dependencies = [
  "tauri-build",
  "tokio",
  "unrar",
+ "walkdir",
  "window-shadows",
  "window-vibrancy",
  "zip",

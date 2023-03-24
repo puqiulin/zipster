@@ -27,8 +27,8 @@
         width: 100%;
         height: 100%;
         display: flex;
-        flex-direction: column;
         justify-content: center;
+        gap: 1em;
       }
 
       .compression-bottom-box {
@@ -48,9 +48,32 @@
           .files-item {
             display: flex;
             flex-direction: column;
+            gap: 0.5em;
 
-            .files-item-info {
-              margin-bottom: 0.5em;
+            .files-item-info-box {
+              display: flex;
+              align-items: center;
+              gap: 0.5em;
+
+              .files-item-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5em;
+
+                .files-item-info-head {
+                  display: flex;
+                  align-items: center;
+                  gap: 0.5em;
+
+                  .files-item-info-name {
+                    font-size: 18px;
+                    font-weight: bold;
+                  }
+                }
+
+                .files-item-info-size {
+                }
+              }
             }
           }
         }
@@ -58,10 +81,11 @@
         .compression-bottom-buttons {
           width: 100%;
           display: flex;
+          align-items: center;
           gap: 0.5em;
 
           .compression-button {
-            width: 90%;
+            width: 100%;
           }
         }
       }

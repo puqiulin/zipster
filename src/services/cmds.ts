@@ -28,5 +28,9 @@ export async function getFilesInfoCMD(payload: CmdType.filesInfoParam) {
     return invoke<CmdResponseType.fileInfo[]>("get_files_info", {payload});
 }
 
+export async function getDirSizeCMD(payload: CmdType.dirPathParam) {
+    return invoke<number>("get_dir_size", {payload});
+}
+
 
 

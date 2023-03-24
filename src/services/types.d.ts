@@ -9,6 +9,7 @@ declare namespace CmdType {
 
     interface compressionParam {
         filesPath: string[],
+        savePath: string
     }
 
     interface openParam {
@@ -19,6 +20,10 @@ declare namespace CmdType {
         filePath: string,
     }
 
+    interface dirPathParam {
+        dirPath: string,
+    }
+
     interface filesInfoParam {
         filesPath: string[],
     }
@@ -26,8 +31,11 @@ declare namespace CmdType {
 
 declare namespace CmdResponseType {
     interface fileInfo {
-        fileName: string,
-        fileType: string,
-        fileSize: number,
+        name: string,
+        extension: string,
+        size: number,
+        path: string,
+        isDir: boolean,
     }
+
 }

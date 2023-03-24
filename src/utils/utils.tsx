@@ -1,4 +1,4 @@
-export function formatBytes(bytes: number) {
+export function covertFileSizeToHuman(bytes: number) {
     if (bytes === 0) return '0 Bytes';
 
     const units = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
@@ -6,4 +6,11 @@ export function formatBytes(bytes: number) {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
 
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + units[i];
+}
+
+export function getParentDirectory(filePath: string) {
+    const pathSeparatorRegex = /\/|\\/;
+    const pathParts = filePath.split(pathSeparatorRegex);
+    pathParts.pop();
+    return pathParts.join('/');
 }

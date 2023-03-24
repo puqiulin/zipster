@@ -9,16 +9,13 @@ export const darkTheme = createTheme({
         mode: 'dark',
     },
     components: {
-        // MuiButton: {
-        //     styleOverrides: {
-        //         root: {
-        //             backgroundColor: "hotpink",
-        //             '&:hover': {
-        //                 backgroundColor: 'pink',
-        //             },
-        //         },
-        //     },
-        // },
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: "20px"
+                },
+            },
+        },
         MuiPaper: {
             styleOverrides: {
                 root: {
@@ -31,10 +28,10 @@ export const darkTheme = createTheme({
                 root: {
                     boxShadow: "0 0 5px rgba(255, 255, 255, 0.5)",
                     backgroundColor: '#111111',
-                    '&:hover': {
-                        backgroundColor: '#222222',
-                        boxShadow: "0 0 18px rgba(255, 255, 255, 0.5)"
-                    },
+                    // '&:hover': {
+                    //     backgroundColor: '#222222',
+                    //     boxShadow: "0 0 18px rgba(255, 255, 255, 0.5)"
+                    // },
                 },
             },
         },
@@ -59,6 +56,13 @@ export const lightTheme = createTheme({
         mode: 'light',
     },
     components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    borderRadius: "20px"
+                },
+            },
+        },
         MuiPaper: {
             styleOverrides: {
                 root: {
@@ -71,10 +75,10 @@ export const lightTheme = createTheme({
                 root: {
                     backgroundColor: '#f5f5f5',
                     boxShadow: "0 0 5px rgba(0, 0, 0, 0.5)",
-                    '&:hover': {
-                        backgroundColor: '#e0e0e0',
-                        boxShadow: "0 0 15px rgba(0, 0, 0, 0.5)",
-                    },
+                    // '&:hover': {
+                    //     backgroundColor: '#e0e0e0',
+                    //     boxShadow: "0 0 15px rgba(0, 0, 0, 0.5)",
+                    // },
                 },
             },
         },

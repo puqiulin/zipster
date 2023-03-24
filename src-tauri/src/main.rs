@@ -4,6 +4,7 @@
 )]
 
 mod app;
+mod features;
 mod utils;
 
 use crate::app::cmds::cmds;

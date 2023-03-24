@@ -12,6 +12,7 @@ import {open} from '@tauri-apps/api/dialog';
 import {enqueueSnackbar} from "notistack";
 import FolderIcon from '@mui/icons-material/Folder';
 import {decompressionCMD, getFileInfoCMD, openCMD} from "@/services/cmds";
+import {getParentDirectory} from "@/utils/utils";
 
 const Decompression: React.FC = () => {
 
@@ -49,7 +50,7 @@ const Decompression: React.FC = () => {
                 enqueueSnackbar("decompression file successfully! ", {
                     variant: "success",
                 })
-                await openCMD({path: decompressionFile})
+                await openCMD({path: getParentDirectory(decompressionFile)})
             }).catch(e => {
                 enqueueSnackbar("decompression file error: " + JSON.stringify(e), {
                     variant: "error",

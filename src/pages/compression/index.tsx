@@ -1,39 +1,58 @@
-import React, {useState} from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
 import "./index.scss"
 import Typography from '@mui/material/Typography';
-import DriveFileMoveIcon from '@mui/icons-material/DriveFileMove';
 import {
     Button,
     Card,
     CardContent,
-    CircularProgress, Divider, MenuItem, Select,
+    CircularProgress, Divider, IconButton, MenuItem, Select,
 } from "@mui/material";
 import {open} from '@tauri-apps/api/dialog';
 import {enqueueSnackbar} from "notistack";
-import FolderIcon from '@mui/icons-material/Folder';
-import {compressionCMD, getFilesInfoCMD} from "@/services/cmds";
-import {formatBytes} from "@/utils/format-bytes";
-import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import {getFilesInfoCMD} from "@/services/cmds";
 import FolderZipIcon from '@mui/icons-material/FolderZip';
+import ConfirmDialog from "@/components/compression/confirm-dialog";
+import {useRecoilState, useSetRecoilState} from "recoil";
+import {
+    compressionConfirmDialogState,
+    compressionFilesInfoState,
+    compressionFilesState,
+    compressionTypeState
+} from "@/services/states";
+import FolderIcon from '@mui/icons-material/Folder';
+import DescriptionIcon from '@mui/icons-material/Description';
+import FilesItem from "@/components/compression/files-item";
+import fileInfo = CmdResponseType.fileInfo;
+import {supportCompressionType} from "@/utils/constants";
 
 const Compression: React.FC = () => {
-    const [compressionFiles, setCompressionFiles] = useState<string[]>()
-    const [filesInfo, setFilesInfo] = useState<CmdResponseType.fileInfo[]>()
+    const [compressionFiles, setCompressionFiles] = useRecoilState(compressionFilesState)
+    const [filesInfo, setFilesInfo] = useRecoilState(compressionFilesInfoState)
     const [openFilesExploreLoading, setOpenFilesExploreLoading] = useState<boolean>(false)
-    const [compressionFilesLoading, setCompressionFilesLoading] = useState<boolean>(false)
-    const [compressionType, setCompressionType] = useState<string>("zip")
+    const [compressionType, setCompressionType] = useRecoilState(compressionTypeState)
+    const setOpen = useSetRecoilState(compressionConfirmDialogState)
+    const inputFile = useRef<HTMLInputElement | null>(null)
 
-    const openFilesExplorer = async () => {
+    //TODO: Optimize performance
+    useEffect(() => {
+        if (compressionFiles.length > 0) {
+            getFilesInfoCMD({filesPath: compressionFiles || []}).then(filesInfo => {
+                setFilesInfo(filesInfo)
+            })
+        }
+    }, [compressionFiles])
+
+    //https://github.com/tauri-apps/tauri/discussions/5622
+    const openFilesExplorer = () => {
         setOpenFilesExploreLoading(true)
         open({
             multiple: true,
-        }).then(async files => {
-            setCompressionFiles(files as string[])
-            getFilesInfoCMD({filesPath: files as string[]}).then(files => {
-                setFilesInfo(files)
-            })
+        }).then(files => {
+            if (files?.length || 0 > 0) {
+                setCompressionFiles([...new Set([...files as string[], ...compressionFiles])])
+            }
         }).catch(e => {
-            enqueueSnackbar("open file error: " + JSON.stringify(e), {
+            enqueueSnackbar("Open file explorer error: " + JSON.stringify(e), {
                 variant: "error",
             })
         }).finally(() => {
@@ -41,19 +60,21 @@ const Compression: React.FC = () => {
         })
     }
 
-    const compression = async () => {
-        setCompressionFilesLoading(true)
-        compressionCMD({filesPath: compressionFiles || []}).then(async () => {
-            enqueueSnackbar("compression file successfully! ", {
-                variant: "success",
-            })
-            // await openCMD({path: compressionFiles})
+    const openDirsExplorer = () => {
+        setOpenFilesExploreLoading(true)
+        open({
+            multiple: true,
+            directory: true,
+        }).then(files => {
+            if (files?.length || 0 > 0) {
+                setCompressionFiles([...new Set([...files as string[], ...compressionFiles])])
+            }
         }).catch(e => {
-            enqueueSnackbar("compression file error: " + JSON.stringify(e), {
+            enqueueSnackbar("Open file explorer error: " + JSON.stringify(e), {
                 variant: "error",
             })
         }).finally(() => {
-            setCompressionFilesLoading(false)
+            setOpenFilesExploreLoading(false)
         })
     }
 
@@ -66,60 +87,53 @@ const Compression: React.FC = () => {
                 <Card className="compression-card">
                     <CardContent>
                         <div className="compression-top-box">
-                            {/*<Typography variant="h6" align="justify">Compression files</Typography>*/}
                             <Button
                                 onClick={() => openFilesExplorer()}
                                 variant="contained"
                                 disabled={openFilesExploreLoading}
                                 startIcon={openFilesExploreLoading ? <CircularProgress size={20}/> :
-                                    <FolderCopyIcon className="MuiSvgIcon-colorCustom"/>}>
+                                    <DescriptionIcon className="MuiSvgIcon-colorCustom"/>}>
                                 Select files
                             </Button>
+                            <Button
+                                onClick={() => openDirsExplorer()}
+                                variant="contained"
+                                disabled={openFilesExploreLoading}
+                                startIcon={openFilesExploreLoading ? <CircularProgress size={20}/> :
+                                    <FolderIcon className="MuiSvgIcon-colorCustom"/>}>
+                                Select dirs
+                            </Button>
                         </div>
-                        <div className="compression-bottom-box">
-                            {compressionFiles && <div className="compression-file-info">
-                                {filesInfo?.map((fileInfo, index) => (
-                                    <div className="files-item">
-                                        <div className="files-item-info">
-                                            {index + 1}:&nbsp;
-                                            {fileInfo?.fileName}
-                                            &nbsp;
-                                            [{fileInfo?.fileSize && formatBytes(fileInfo.fileSize)}]
-                                        </div>
-                                        <Divider/>
-                                    </div>
-                                ))}
-                            </div>}
-                            {compressionFiles ?
-                                compressionFilesLoading ?
-                                    <CircularProgress size={20}/> :
-                                    <div className="compression-bottom-buttons">
-                                        <Button
-                                            className="compression-button"
-                                            onClick={() => compression()}
-                                            variant="contained"
-                                            startIcon={<FolderZipIcon className="MuiSvgIcon-colorCustom"/>}
-                                        >
-                                            Compression files
-                                        </Button>
-
-                                        <Select
-                                            size="small"
-                                            defaultValue={compressionType}
-                                            value={compressionType}
-                                            onChange={e => e.target.value ? setCompressionType(e.target.value) : setCompressionType("zip")}
-                                        >
-                                            <MenuItem value="zip">zip</MenuItem>
-                                            <MenuItem value="tar">tar</MenuItem>
-                                            <MenuItem value="gz">gz</MenuItem>
-                                            <MenuItem value="bz2">bz2</MenuItem>
-                                            <MenuItem value="7z">7z</MenuItem>
-                                            <MenuItem value="rar">rar</MenuItem>
-                                        </Select>
-                                    </div>
-                                : ""
-                            }
-                        </div>
+                        {compressionFiles.length > 0 &&
+                            <div className="compression-bottom-box">
+                                <div className="compression-file-info">
+                                    {filesInfo?.map((fileInfo, index) => (
+                                        <FilesItem key={index} fileInfo={fileInfo}/>
+                                    ))}
+                                </div>
+                                <div className="compression-bottom-buttons">
+                                    <Button
+                                        className="compression-button"
+                                        onClick={() => setOpen(true)}
+                                        variant="contained"
+                                        startIcon={<FolderZipIcon className="MuiSvgIcon-colorCustom"/>}
+                                    >
+                                        Compression files
+                                    </Button>
+                                    <ConfirmDialog/>
+                                    <Select
+                                        size="small"
+                                        defaultValue={compressionType}
+                                        value={compressionType}
+                                        onChange={e => e.target.value ? setCompressionType(e.target.value) : setCompressionType("zip")}
+                                    >
+                                        {supportCompressionType.map((value, index) => (
+                                            <MenuItem value={value} key={index}>{value}</MenuItem>
+                                        ))}
+                                    </Select>
+                                </div>
+                            </div>
+                        }
                     </CardContent>
                 </Card>
             </div>

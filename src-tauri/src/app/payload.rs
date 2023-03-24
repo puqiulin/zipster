@@ -12,6 +12,14 @@ pub struct DecompressionParam {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct CompressionParam {
+    #[serde(rename(deserialize = "filesPath"))]
+    pub files_path: Vec<String>,
+    #[serde(rename(deserialize = "compressionFormat"))]
+    pub compression_format: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct OpenParam {
     pub path: String,
 }
@@ -20,6 +28,12 @@ pub struct OpenParam {
 pub struct FileInfoParam {
     #[serde(rename(deserialize = "filePath"))]
     pub file_path: String,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct DirPathParam {
+    #[serde(rename(deserialize = "dirPath"))]
+    pub dir_path: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
