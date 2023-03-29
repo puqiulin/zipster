@@ -3,6 +3,7 @@ use once_cell::sync::OnceCell;
 use std::fs;
 use std::fs::File;
 use std::io::{Read, Write};
+use std::os::unix::fs::PermissionsExt;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
 use zip::write::FileOptions;
@@ -18,48 +19,55 @@ impl Zip {
         ZIP.get_or_init(|| Zip {})
     }
 
-    //TODO: keep contains dir structure
+    //TODO:show compression progress
     pub fn zip(&self, files_path: Vec<&Path>, save_path: &Path, file_name: &str) -> Result<()> {
         let zip_file = File::create(save_path.join(file_name))?;
-        let zip_option = FileOptions::default().compression_method(CompressionMethod::Deflated);
-        let mut zip = ZipWriter::new(zip_file);
+        let mut zip_option = FileOptions::default().compression_method(CompressionMethod::Deflated);
+        let mut zip_writer = ZipWriter::new(zip_file);
 
-        for p in files_path {
-            if p.is_dir() {
-                for entry in WalkDir::new(p) {
+        for path in files_path {
+            let canonical_path = fs::canonicalize(&path)?;
+            let mut file_name = canonical_path
+                .file_name()
+                .expect("Failed to get file name")
+                .to_string_lossy()
+                .to_string();
+
+            if canonical_path.is_dir() {
+                for entry in WalkDir::new(&canonical_path) {
                     let entry = entry?;
-                    let entry_path = entry.path();
-                    if entry_path.is_file() {
-                        let file_name = entry_path
-                            .file_name()
-                            .expect("Get file name failed")
-                            .to_str()
-                            .expect("File name to str failed");
-                        let mut buffer = Vec::new();
-                        File::open(entry_path)?.read_to_end(&mut buffer)?;
-                        zip.start_file(file_name, zip_option)?;
-                        zip.write_all(&buffer)?;
+                    let path = entry.path();
+                    let path_name = path
+                        .strip_prefix(&canonical_path)?
+                        .to_string_lossy()
+                        .to_string();
+                    zip_option =
+                        zip_option.unix_permissions(entry.metadata()?.permissions().mode());
+                    let dir_path = Path::new(&file_name)
+                        .join(&path_name)
+                        .to_string_lossy()
+                        .to_string();
+
+                    if path.is_dir() {
+                        zip_writer.add_directory(dir_path, zip_option)?;
+                    } else if path.is_file() {
+                        zip_writer.start_file(dir_path, zip_option)?;
+                        std::io::copy(&mut File::open(path)?, &mut zip_writer)?;
                     }
                 }
-            } else if p.is_file() {
-                let file_name = p
-                    .file_name()
-                    .expect("Get file name failed")
-                    .to_str()
-                    .expect("File name to str failed");
-                let mut buffer = Vec::new();
-                File::open(p)?.read_to_end(&mut buffer)?;
-                zip.start_file(file_name, zip_option)?;
-                zip.write_all(&buffer)?;
+            } else if canonical_path.is_file() {
+                zip_option = zip_option
+                    .unix_permissions(fs::metadata(&canonical_path)?.permissions().mode());
+                zip_writer.start_file(file_name, zip_option)?;
+                std::io::copy(&mut File::open(canonical_path)?, &mut zip_writer)?;
             }
         }
-        zip.finish()?;
+        zip_writer.finish()?;
         Ok(())
     }
 
     //TODO:keep contains dir structure
     pub fn unzip(&self, file_path: &Path) -> Result<()> {
-        let file_path = Path::new(file_path);
         let mut output_dir = file_path
             .parent()
             .expect("Failed to get file parent dir")
@@ -70,7 +78,6 @@ impl Zip {
                     .to_string_lossy()
                     .to_string(),
             );
-
         if output_dir.exists() {
             let mut index = 1;
             loop {
@@ -85,21 +92,21 @@ impl Zip {
                 break;
             }
         }
-        fs::create_dir_all(output_dir.clone())?;
+        fs::create_dir_all(&output_dir)?;
 
         let mut archive = ZipArchive::new(File::open(file_path)?)?;
         for i in 0..archive.len() {
             let mut file = archive.by_index(i)?;
-            let out_path = file.mangled_name();
-
+            let out_path = PathBuf::from(&output_dir).join(file.mangled_name());
             if file.is_dir() {
                 fs::create_dir_all(&out_path)?;
-            } else {
+            } else if file.is_file() {
                 if let Some(parent) = out_path.parent() {
-                    fs::create_dir_all(parent)?;
+                    if !parent.exists() {
+                        fs::create_dir_all(&parent)?;
+                    }
                 }
-                let mut out_file = File::create(out_path)?;
-                std::io::copy(&mut file, &mut out_file)?;
+                std::io::copy(&mut file, &mut File::create(&out_path)?)?;
             }
         }
 

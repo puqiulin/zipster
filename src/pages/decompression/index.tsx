@@ -16,7 +16,8 @@ import {getParentDirectory} from "@/utils/utils";
 import FilesItem from "@/components/compression/files-item";
 
 const Decompression: React.FC = () => {
-
+    // change useState to useRef
+    // use setState prevalue not current
     const [decompressionFile, setDecompressionFile] = useState<string>("")
     const [fileInfo, setFileInfo] = useState<CmdResponseType.fileInfo>()
     const [openFileExploreLoading, setOpenFileExploreLoading] = useState<boolean>(false)
@@ -25,7 +26,7 @@ const Decompression: React.FC = () => {
     const openFileExplorer = async () => {
         setOpenFileExploreLoading(true)
         open({
-            multiple: false, //support multiple files?
+            multiple: false,
             filters: [{
                 name: 'decompressionFile',
                 extensions: ['zip', 'gz', 'bz2', '7z', 'rar', 'tar', 'jar']
@@ -72,7 +73,6 @@ const Decompression: React.FC = () => {
                 <Card className="decompression-card">
                     <CardContent>
                         <div className="decompression-top-box">
-                            {/*<Typography variant="h6" align="justify">File Decompression</Typography>*/}
                             <Button
                                 onClick={() => openFileExplorer()}
                                 variant="contained"
@@ -87,18 +87,16 @@ const Decompression: React.FC = () => {
                                 <div className="decompression-file-info">
                                     <FilesItem fileInfo={fileInfo} isCompression={false}/>
                                 </div>
-                                {decompressionFile ?
-                                    <div className="decompression-bottom-buttons">
-                                        <Button
-                                            onClick={() => decompression()}
-                                            variant="contained"
-                                            startIcon={decompressionFileLoading ? <CircularProgress size={20}/> :
-                                                <DriveFileMoveIcon className="MuiSvgIcon-colorCustom"/>}
-                                        >
-                                            Decompression file
-                                        </Button>
-                                    </div> : ""
-                                }
+                                <div className="decompression-bottom-buttons">
+                                    <Button
+                                        onClick={() => decompression()}
+                                        variant="contained"
+                                        startIcon={decompressionFileLoading ? <CircularProgress size={20}/> :
+                                            <DriveFileMoveIcon className="MuiSvgIcon-colorCustom"/>}
+                                    >
+                                        Decompression file
+                                    </Button>
+                                </div>
                             </div>}
                     </CardContent>
                 </Card>

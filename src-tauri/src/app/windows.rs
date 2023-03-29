@@ -11,12 +11,12 @@ pub fn init() {
     // #[cfg(target_os = "macos")]
     // apply_vibrancy(
     //     &main_window,
-    //     NSVisualEffectMaterial::Light,
+    //     NSVisualEffectMaterial::FullScreenUI,
     //     None,
     //     Some(20 as f64),
     // )
     // .unwrap();
-    //
+
     // #[cfg(target_os = "windows")]
     // apply_acrylic(&main_window, Some((18, 18, 18, 125))).unwrap();
 }

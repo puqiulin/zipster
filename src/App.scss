@@ -2,7 +2,7 @@
   height: 100vh;
   width: 100%;
   display: flex;
-
+  //overflow-y: hidden;
   transition: all .25s linear;
 
   -webkit-touch-callout: none; /* iOS Safari */
@@ -40,10 +40,6 @@
     align-items: center;
     justify-content: space-between;
 
-    .menu-selected {
-      color: pink;
-    }
-
     .menu-top {
       display: flex;
       flex-direction: column;
@@ -53,7 +49,6 @@
       gap: 0.5em;
 
     }
-
 
     .menu-bottom {
       display: flex;

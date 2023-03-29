@@ -1,14 +1,13 @@
 import React from "react";
-import {Card, Divider, Paper, Typography} from "@mui/material";
+import {Card, Divider, Typography} from "@mui/material";
 import "./index.scss"
 import ChangeTheme from "@/components/settings/change-theme";
 import PinWindow from "@/components/settings/pin-window";
 import {darkTheme, lightTheme} from "@/theme";
-import {useRecoilState} from "recoil";
-import {themeState} from "@/services/states";
+import {useTheme} from "@/hooks/use-theme";
 
 const Setting: React.FC = () => {
-    const [theme, setTheme] = useRecoilState(themeState);
+    const {theme} = useTheme();
     const settingNameColor = theme === "light" ? lightTheme.palette.text.secondary : darkTheme.palette.text.secondary
 
     return (

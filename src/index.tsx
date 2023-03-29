@@ -12,8 +12,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
                 autoHideDuration={2000}
                 anchorOrigin={{horizontal: "center", vertical: "top"}}
                 dense={true}
-            />
-            <RouterProvider router={router}/>
+            >
+                <RouterProvider router={router}/>
+            </SnackbarProvider>
         </RecoilRoot>
     </React.StrictMode>
 )

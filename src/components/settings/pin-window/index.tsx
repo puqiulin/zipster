@@ -1,21 +1,18 @@
 import React, {useEffect, useState} from "react";
 import {IconButton} from "@mui/material";
-import DarkModeIcon from "@mui/icons-material/DarkMode";
-import LightModeIcon from "@mui/icons-material/LightMode";
 import localforage from "localforage";
-import {useRecoilState} from "recoil";
-import {themeState} from "@/services/states";
 import "./index.scss"
 import PushPinIcon from "@mui/icons-material/PushPin";
 import {appWindow} from "@tauri-apps/api/window";
 import {enqueueSnackbar} from "notistack";
+import {useTheme} from "@/hooks/use-theme";
 
 const PinWindow: React.FC = () => {
-    const [theme, setTheme] = useRecoilState(themeState);
+    const {theme} = useTheme();
     const [pin, setPin] = useState<boolean>(false)
 
     useEffect(() => {
-        localforage.getItem("pin-window").then(async (pin) => {
+        localforage.getItem("piWindow").then(async (pin) => {
             appWindow.setAlwaysOnTop(pin as boolean).then(() => {
                 setPin(pin as boolean)
             })
@@ -28,7 +25,7 @@ const PinWindow: React.FC = () => {
 
     const pinWindow = async () => {
         appWindow.setAlwaysOnTop(!pin).then(async () => {
-            localforage.setItem("pin-window", !pin).then(() => {
+            localforage.setItem("piWindow", !pin).then(() => {
                 setPin(!pin)
             })
         }).catch(e => {

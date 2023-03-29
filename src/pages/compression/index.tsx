@@ -5,7 +5,7 @@ import {
     Button,
     Card,
     CardContent,
-    CircularProgress, MenuItem, Select,
+    CircularProgress, Input, MenuItem, NativeSelect, Select, TextField,
 } from "@mui/material";
 import {open} from '@tauri-apps/api/dialog';
 import {enqueueSnackbar} from "notistack";
@@ -30,7 +30,6 @@ const Compression: React.FC = () => {
     const [openFilesExploreLoading, setOpenFilesExploreLoading] = useState<boolean>(false)
     const [compressionType, setCompressionType] = useRecoilState(compressionTypeState)
     const setOpen = useSetRecoilState(compressionConfirmDialogState)
-    const inputFile = useRef<HTMLInputElement | null>(null)
 
     //TODO: Optimize performance
     useEffect(() => {
@@ -41,32 +40,20 @@ const Compression: React.FC = () => {
         }
     }, [compressionFiles])
 
+    //tauri not support both select dirs and files until write this code
     //https://github.com/tauri-apps/tauri/discussions/5622
-    const openFilesExplorer = () => {
+    const openFilesExplorer = (isDir: boolean) => {
         setOpenFilesExploreLoading(true)
         open({
             multiple: true,
+            directory: isDir
         }).then(files => {
             if (files?.length || 0 > 0) {
                 setCompressionFiles([...new Set([...files as string[], ...compressionFiles])])
-            }
-        }).catch(e => {
-            enqueueSnackbar("Open file explorer error: " + JSON.stringify(e), {
-                variant: "error",
-            })
-        }).finally(() => {
-            setOpenFilesExploreLoading(false)
-        })
-    }
-
-    const openDirsExplorer = () => {
-        setOpenFilesExploreLoading(true)
-        open({
-            multiple: true,
-            directory: true,
-        }).then(files => {
-            if (files?.length || 0 > 0) {
-                setCompressionFiles([...new Set([...files as string[], ...compressionFiles])])
+            } else {
+                enqueueSnackbar("No file selected", {
+                    variant: "warning",
+                })
             }
         }).catch(e => {
             enqueueSnackbar("Open file explorer error: " + JSON.stringify(e), {
@@ -87,7 +74,7 @@ const Compression: React.FC = () => {
                     <CardContent>
                         <div className="compression-top-box">
                             <Button
-                                onClick={() => openFilesExplorer()}
+                                onClick={() => openFilesExplorer(false)}
                                 variant="contained"
                                 disabled={openFilesExploreLoading}
                                 startIcon={openFilesExploreLoading ? <CircularProgress size={20}/> :
@@ -95,7 +82,7 @@ const Compression: React.FC = () => {
                                 Select files
                             </Button>
                             <Button
-                                onClick={() => openDirsExplorer()}
+                                onClick={() => openFilesExplorer(true)}
                                 variant="contained"
                                 disabled={openFilesExploreLoading}
                                 startIcon={openFilesExploreLoading ? <CircularProgress size={20}/> :
@@ -120,7 +107,9 @@ const Compression: React.FC = () => {
                                         Compression files
                                     </Button>
                                     <ConfirmDialog/>
+                                    {/*<NativeSelect>*/}
                                     <Select
+                                        className="compression-type-select"
                                         size="small"
                                         defaultValue={compressionType}
                                         value={compressionType}
@@ -128,8 +117,10 @@ const Compression: React.FC = () => {
                                     >
                                         {supportCompressionType.map((value, index) => (
                                             <MenuItem value={value} key={index}>{value}</MenuItem>
+                                            // <option key={index} value={value}>{value}</option>
                                         ))}
                                     </Select>
+                                    {/*</NativeSelect>*/}
                                 </div>
                             </div>
                         }

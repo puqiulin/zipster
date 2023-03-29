@@ -8,8 +8,11 @@ mod features;
 mod utils;
 
 use crate::app::cmds::cmds;
+use crate::app::handler::Handler;
 use crate::app::setup::setup;
-use tauri::Builder;
+use anyhow::Context;
+use tauri::{Builder, Event, Manager};
+use window_vibrancy::{apply_vibrancy, NSVisualEffectMaterial};
 
 #[tokio::main]
 async fn main() {

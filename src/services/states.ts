@@ -1,10 +1,41 @@
 import {atom} from "recoil";
-import * as localforage from "localforage";
 import fileInfo = CmdResponseType.fileInfo;
+import localforage from "localforage";
+import {enqueueSnackbar} from "notistack";
 
-export const themeState = atom<string>({
+type Theme = "dark" | "light"
+const defaultTheme = (): Theme => {
+    localforage.getItem("isFollowSystemTheme").then(value => {
+        if (value !== null && value) {
+            return window.matchMedia('(prefers-color-scheme: dark)').matches ? "dark" : "light"
+        }
+    }).catch(e => {
+        enqueueSnackbar("get is follow system theme error: " + JSON.stringify(e), {
+            variant: "error",
+        })
+    })
+    return "light"
+}
+
+const defaultFollowSystem = (): boolean => {
+    localforage.getItem("isFollowSystemTheme").then(value => {
+        return value === null ? true : value
+    }).catch(e => {
+        enqueueSnackbar("get theme error: " + JSON.stringify(e), {
+            variant: "error",
+        })
+    })
+    return true;
+}
+
+export const isFollowSystemThemeState = atom<boolean>({
+    key: 'isFollowSystemThemeState',
+    default: defaultFollowSystem(),
+});
+
+export const themeState = atom<"light" | "dark">({
     key: 'themeState',
-    default: localforage.getItem("theme").then() || "null",
+    default: defaultTheme(),
 });
 
 export const compressionConfirmDialogState = atom<boolean>({

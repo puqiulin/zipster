@@ -4,8 +4,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogContentText,
-    DialogTitle, IconButton, Input, TextField
+    DialogTitle, IconButton, TextField
 } from "@mui/material";
 import {useRecoilState, useRecoilValue} from "recoil";
 import {
@@ -19,8 +18,6 @@ import {enqueueSnackbar} from "notistack";
 import {getParentDirectory} from "@/utils/utils";
 import FolderIcon from "@mui/icons-material/Folder";
 import {open} from "@tauri-apps/api/dialog";
-import FolderZipIcon from "@mui/icons-material/FolderZip";
-import {darkTheme} from "@/theme";
 
 const ConfirmDialog: React.FC = () => {
     const [openDialog, setOpenDialog] = useRecoilState(compressionConfirmDialogState)
@@ -44,6 +41,7 @@ const ConfirmDialog: React.FC = () => {
                 variant: "success",
             })
             await openCMD({path: savePath})
+            setOpenDialog(false)
         }).catch(e => {
             enqueueSnackbar("Compression file error: " + JSON.stringify(e), {
                 variant: "error",
