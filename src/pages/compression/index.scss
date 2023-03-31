@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  transition: all .25s linear;
 
   .compression-title {
     display: flex;
@@ -19,15 +20,18 @@
     align-items: center;
 
     .compression-card {
-      width: 90%;
+      max-width: 90%;
       max-height: 90%;
-      transition: all .25s linear;
+      display: flex;
+      flex-direction: column;
+      padding: 1em;
 
       .compression-top-box {
         width: 100%;
         height: 100%;
         display: flex;
         justify-content: center;
+
         gap: 1em;
       }
 
@@ -36,24 +40,31 @@
         display: flex;
         flex-direction: column;
         gap: 0.5em;
+        margin-top: 0.5em;
+
+        .compression-bottom-box-head {
+          display: flex;
+          justify-content: flex-end;
+          gap: 1em;
+        }
 
         .compression-file-info {
           display: flex;
           flex-direction: column;
           font-size: 15px;
           overflow-y: auto;
+          overflow-x: auto;
           gap: 0.5em;
-          margin-top: 0.5em;
         }
 
         .compression-bottom-buttons {
           width: 100%;
           display: flex;
           align-items: center;
+          justify-content: center;
           gap: 0.5em;
 
           .compression-button {
-            width: 100%;
           }
 
           .compression-type-select {

@@ -2,8 +2,17 @@ use crate::app::response::FileInfoResponse;
 use anyhow::Result;
 use std::fs;
 use std::path::{Path, PathBuf};
+use walkdir::WalkDir;
 
 pub fn get_file_info(file_path: &Path) -> Result<FileInfoResponse> {
+    let file_size = {
+        let metadata = file_path.metadata()?;
+        if metadata.is_file() {
+            Some(metadata.len())
+        } else {
+            Some(0)
+        }
+    };
     Ok(FileInfoResponse {
         name: file_path
             .file_name()
@@ -17,7 +26,7 @@ pub fn get_file_info(file_path: &Path) -> Result<FileInfoResponse> {
             .to_str()
             .unwrap_or("")
             .to_string(),
-        size: Some(file_path.metadata()?.len()),
+        size: file_size,
         path: file_path.to_string_lossy().to_string(),
         is_dir: file_path.is_dir(),
     })
@@ -37,7 +46,7 @@ pub fn get_dir_info(file_path: &Path) -> Result<FileInfoResponse> {
             .to_str()
             .unwrap_or("")
             .to_string(),
-        size: None,
+        size: Some(0),
         path: file_path.to_string_lossy().to_string(),
         is_dir: file_path.is_dir(),
     })
@@ -50,17 +59,14 @@ pub fn get_files_info(files_path: Vec<&Path>) -> Result<Vec<FileInfoResponse>> {
         .collect::<Vec<FileInfoResponse>>())
 }
 
+//TODO:use tokio performance optimization
 pub fn get_dir_files_size(dir_path: &Path) -> Result<u64> {
     let mut total_size = 0;
 
-    for f in fs::read_dir(dir_path)? {
-        let entry = f?;
-        let metadata = entry.metadata()?;
-
+    for entry in WalkDir::new(dir_path) {
+        let metadata = entry?.metadata()?;
         if metadata.is_file() {
             total_size += metadata.len();
-        } else if metadata.is_dir() {
-            total_size += get_dir_files_size(&entry.path())?;
         }
     }
 

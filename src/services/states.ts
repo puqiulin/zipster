@@ -43,9 +43,9 @@ export const compressionConfirmDialogState = atom<boolean>({
     default: false,
 });
 
-export const compressionFilesState = atom<string[]>({
-    key: 'compressionFilesState',
-    default: [],
+export const deCompressionFileInfoState = atom<fileInfo | undefined>({
+    key: 'deCompressionFileInfoState',
+    default: undefined,
 });
 
 export const compressionFilesInfoState = atom<fileInfo[]>({

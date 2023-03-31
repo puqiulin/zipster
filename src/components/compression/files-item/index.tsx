@@ -1,10 +1,10 @@
-import React, {useEffect, useState} from "react";
+import React, {memo, useEffect, useState} from "react";
 import {
     CircularProgress,
     Divider, IconButton
 } from "@mui/material";
-import {useRecoilState} from "recoil";
-import {compressionFilesState} from "@/services/states";
+import {useSetRecoilState} from "recoil";
+import {compressionFilesInfoState, deCompressionFileInfoState} from "@/services/states";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
 import FolderIcon from "@mui/icons-material/Folder";
 import DescriptionIcon from "@mui/icons-material/Description";
@@ -15,21 +15,24 @@ import {enqueueSnackbar} from "notistack";
 import "./index.scss"
 
 interface Props {
-    fileInfo?: fileInfo
+    fileInfo: fileInfo
     isCompression: boolean
 }
 
 const FilesItem: React.FC<Props> = (props) => {
     const {fileInfo, isCompression} = props;
-    const [compressionFiles, setCompressionFiles] = useRecoilState(compressionFilesState)
+    const setCompressionFilesInfo = useSetRecoilState(compressionFilesInfoState)
+    const setDeCompressionFilesInfo = useSetRecoilState(deCompressionFileInfoState)
     const [fileSizeLoading, setFileSizeLoading] = useState<boolean>(false)
-    const [fileSize, setFileSize] = useState<number>(0)
+    const [fileSize, setFileSize] = useState<number>()
 
     useEffect(() => {
         if (fileInfo?.isDir) {
             setFileSizeLoading(true)
-            getDirSizeCMD({dirPath: fileInfo?.path}).then(size => setFileSize(size)).catch(e => {
-                enqueueSnackbar("Get size error: " + JSON.stringify(e), {
+            getDirSizeCMD({dirPath: fileInfo?.path}).then(size => {
+                setFileSize(size)
+            }).catch(e => {
+                enqueueSnackbar("Get dir size error: " + JSON.stringify(e), {
                     variant: "error",
                 })
             }).finally(() => {
@@ -38,29 +41,29 @@ const FilesItem: React.FC<Props> = (props) => {
         } else {
             setFileSize(fileInfo?.size || 0)
         }
-    }, [fileInfo?.size])
+    }, [fileInfo.size])
 
     const removeFileItem = () => {
-        setCompressionFiles(compressionFiles.filter(f => f !== fileInfo?.path))
+        isCompression ? setCompressionFilesInfo(filesInfo => filesInfo.filter(f => f.path !== fileInfo.path)) : setDeCompressionFilesInfo(undefined)
     }
 
     return (
         <div className="files-item">
             <div className="files-item-info-box">
-                {isCompression && <IconButton onClick={() => removeFileItem()}>
+                <IconButton disabled={fileSizeLoading} onClick={() => removeFileItem()}>
                     <RemoveCircleOutlineIcon sx={{fontSize: "30px"}} className="MuiSvgIcon-colorCustom"/>
-                </IconButton>}
+                </IconButton>
                 <div className="files-item-info">
                     <div className="files-item-info-head">
                         <div>
-                            {fileInfo?.isDir ? <FolderIcon/> : <DescriptionIcon/>}
+                            {fileInfo.isDir ? <FolderIcon/> : <DescriptionIcon/>}
                         </div>
-                        <div className="files-item-info-name">{fileInfo?.name}</div>
+                        <div className="files-item-info-name">{fileInfo.name}</div>
                         <div className="files-item-info-size">
-                            {fileSizeLoading ? <CircularProgress size={20}/> : covertFileSizeToHuman(fileSize)}
+                            {fileSizeLoading ? <CircularProgress size={20}/> : covertFileSizeToHuman(fileSize || 0)}
                         </div>
                     </div>
-                    <div>{fileInfo?.path}</div>
+                    <div className="file-path">{fileInfo.path}</div>
                 </div>
             </div>
             <Divider/>
@@ -68,4 +71,4 @@ const FilesItem: React.FC<Props> = (props) => {
     );
 }
 
-export default FilesItem;
+export default memo(FilesItem);

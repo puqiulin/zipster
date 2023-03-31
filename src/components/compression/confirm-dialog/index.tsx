@@ -10,7 +10,6 @@ import {useRecoilState, useRecoilValue} from "recoil";
 import {
     compressionConfirmDialogState,
     compressionFilesInfoState,
-    compressionFilesState,
     compressionTypeState
 } from "@/services/states";
 import {compressionCMD, openCMD} from "@/services/cmds";
@@ -21,7 +20,7 @@ import {open} from "@tauri-apps/api/dialog";
 
 const ConfirmDialog: React.FC = () => {
     const [openDialog, setOpenDialog] = useRecoilState(compressionConfirmDialogState)
-    const compressionFiles = useRecoilValue(compressionFilesState)
+    const compressionFiles = useRecoilValue(compressionFilesInfoState)
     const compressionType = useRecoilValue(compressionTypeState)
     const compressionFilesInfo = useRecoilValue(compressionFilesInfoState)
     const [compressionFilesLoading, setCompressionFilesLoading] = useState<boolean>(false)
@@ -33,7 +32,7 @@ const ConfirmDialog: React.FC = () => {
         setCompressionFilesLoading(true)
         compressionCMD({
             compressionType,
-            filesPath: compressionFiles || [],
+            filesPath: compressionFiles.map(f => f.path) || [],
             savePath,
             fileName: `${compressionName}.${compressionType}`
         }).then(async () => {
@@ -56,9 +55,7 @@ const ConfirmDialog: React.FC = () => {
         open({
             directory: true,
         }).then(dir => {
-            if (dir) {
-                setSavePath(dir as string)
-            }
+            dir && setSavePath(dir as string)
         }).catch(e => {
             enqueueSnackbar("Open file explorer error: " + JSON.stringify(e), {
                 variant: "error",

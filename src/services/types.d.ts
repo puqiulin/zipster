@@ -39,5 +39,4 @@ declare namespace CmdResponseType {
         path: string,
         isDir: boolean,
     }
-
 }
